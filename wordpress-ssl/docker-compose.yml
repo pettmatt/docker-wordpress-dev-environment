@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  db:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    image: mariadb:10.6.4-focal
+    container_name: database
+    # If you really want to use MySQL, uncomment the following line
+    #image: mysql:8.0.27
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - database:/var/lib/mysql
+    restart: unless-stopped
+    # If you want to add credentials through env file
+    #env_file: .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=wordpress-project-name
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=thepasstoruleoverdb
+    expose:
+      - 3306
+      - 33060
+    networks:
+      - app-network
+
+  wordpress:
+    depends_on: # Won't start before db
+      - db
+    image: wordpress:latest
+    container_name: wordpress
+    volumes:
+      - wordpress:/var/www/html
+      - ./plugins:/var/www/html/wp-content/plugins
+      - ./themes:/var/www/html/wp-content/themes
+    restart: unless-stopped
+    # If you want to add credentials through env file
+    #env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=db # Should be the name of the database service
+      - WORDPRESS_DB_USER=admin
+      - WORDPRESS_DB_PASSWORD=thepasstoruleoverdb
+      - WORDPRESS_DB_NAME=wordpress-project-name
+    networks:
+      - app-network
+
+  webserver:
+    depends_on:
+      - wordpress
+    image: nginx:latest #1.15.12-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - wordpress:/var/www/html # mMunt wordpress to route
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+    networks:
+      - app-network
+
+  certbot:
+    depends_on:
+      - webserver
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - wordpress:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email test@your_domain --agree-tos --no-eff-email --staging -d your_domain -d www.your_domain #--register-unsafely-without-email
+volumes:
+  database:
+  wordpress:
+  certbot-etc:
+  certbot-var:
+
+networks:
+  app-network:
+    driver: bridge # Connects the services
