@@ -1,33 +1,47 @@
+version: '3.8'
+
 services:
   db:
     # We use a mariadb image which supports both amd64 & arm64 architecture
     image: mariadb:10.6.4-focal
+    container_name: database
     # If you really want to use MySQL, uncomment the following line
     #image: mysql:8.0.27
     command: '--default-authentication-plugin=mysql_native_password'
     volumes:
-      - db_data:/var/lib/mysql
+      - database:/var/lib/mysql
     restart: always
+    # If you want to add credentials through env file
+    #env_file: .env
     environment:
       - MYSQL_ROOT_PASSWORD=admin
-      - MYSQL_DATABASE=wordpress-proj-name
+      - MYSQL_DATABASE=wordpress-project-name
       - MYSQL_USER=admin
-      - MYSQL_PASSWORD=adminpass123
+      - MYSQL_PASSWORD=thepasstoruleoverdb
     expose:
       - 3306
       - 33060
+
   wordpress:
+    depends_on: # Won't start before db
+      - db
     image: wordpress:latest
+    container_name: wordpress
     volumes:
-      - wp_data:/var/www/html
+      - wordpress:/var/www/html
+      - ./plugins:/var/www/html/wp-content/plugins
+      - ./themes:/var/www/html/wp-content/themes
     ports:
       - 80:80
     restart: always
+    # If you want to add credentials through env file
+    #env_file: .env
     environment:
-      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_HOST=db # Should be the name of the database service
       - WORDPRESS_DB_USER=admin
-      - WORDPRESS_DB_PASSWORD=adminpass123
-      - WORDPRESS_DB_NAME=wordpress-proj-name
+      - WORDPRESS_DB_PASSWORD=thepasstoruleoverdb
+      - WORDPRESS_DB_NAME=wordpress-project-name
+
 volumes:
-  db_data:
-  wp_data:
+  database:
+  wordpress:
