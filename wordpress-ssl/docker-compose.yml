@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  db:
+  database:
     # We use a mariadb image which supports both amd64 & arm64 architecture
     image: mariadb:10.6.4-focal
     container_name: database
@@ -26,7 +26,7 @@ services:
 
   wordpress:
     depends_on: # Won't start before db
-      - db
+      - database
     image: wordpress:latest
     container_name: wordpress
     volumes:
@@ -37,7 +37,7 @@ services:
     # If you want to add credentials through env file
     #env_file: .env
     environment:
-      - WORDPRESS_DB_HOST=db # Should be the name of the database service
+      - WORDPRESS_DB_HOST=database # Should be the name of the database service
       - WORDPRESS_DB_USER=admin
       - WORDPRESS_DB_PASSWORD=thepasstoruleoverdb
       - WORDPRESS_DB_NAME=wordpress-project-name
@@ -47,7 +47,7 @@ services:
   webserver:
     depends_on:
       - wordpress
-    image: nginx:latest #1.15.12-alpine
+    image: nginx:latest # uses alpine version
     container_name: webserver
     restart: unless-stopped
     ports:

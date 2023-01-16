@@ -1,3 +1,7 @@
+# About the directory structure
+
+The wordpress directory contains a rudimentary development environment which is great as a quick template to get your development environment up and running. The wordpress-ssl directory in the other hand is more robust environment which has SSL-connection already set up. This directory is also going to be the one that is going to get more updates.
+
 # Creating modern WordPress development environment
 
 The purpose of this README file is to explain how this environment works and how it was made. The file has been written in a way that any user should be able to create the same environment using given resources.
