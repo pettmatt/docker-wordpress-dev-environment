@@ -79,3 +79,23 @@ And now the environment needs the network definition.
 
 **Resources:**
  - https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose
+
+## Part 5, Issues & Improvements
+
+Throughout the usage of this docker environment I have come across issues that prevent the development experience from being smooth. On this chapter my aim is to present the issues and improvements. The issues:
+
+**1) Exposed directories don't offer enough flexibility**
+
+In certain projects I have had an issue where I needed deeper access in Wordpress directory tree than what the environment offered (only plugins and themes directories were exposed). Sure it's nice to have simple file structure, but when there's issues developers usually need to access deeper than just plugins and themes directories.
+
+**2) Multiple yml-files are fired on Docker startup**
+
+For whatever reason when Docker is opened it starts previously used containers on before Docker was closed. This issue can be handled by manually closing the containers that aren't in use, but there is the issue that developer **needs** to remember to shut these containers. I don't know about you but I don't always remember to close the container which is why after a weekend it takes about 10 minutes to finally realize why the port is hosting wrong Wordpress environment. And that brings us to the next issue.
+
+**3) Container doesn't care if default port is busy**
+
+This issue could be included in previous one, but because of it's effects I'm going to write it down as completely separate issue. Anyway when there's forgotten container running in the background it's probably running on default port and because there's no secondary port to fallback on that the container could use. The container is going to prompt an error that tells the port is busy or something similar. This could be probably fixed so developer wouldn't need to stop the running container, before they could (for example) move to another project for a while.
+
+**4) The localhost domain is too simple**
+
+When an instance of the Wordpress environment is running it's showed as just **localhost**. It would be helpful if the url would atleast show which port the instance is running on.
