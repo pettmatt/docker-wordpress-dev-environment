@@ -2,3 +2,5 @@
 /**/themes
 /**/.env
 /TODO.txt
+/nginx-conf/certifications/*.test+3-key.pem
+*.pem

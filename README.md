@@ -2,6 +2,13 @@
 
 The wordpress directory contains a rudimentary development environment which is great as a quick template to get your development environment up and running. The wordpress-ssl directory in the other hand is more robust environment which has SSL-connection already set up. This directory is also going to be the one that is going to get more updates.
 
+*If something isn't working as intended please double check what has changed between the tested versions and the latests.*
+
+**Latest tested versions**
+- MariaDB
+- Wordpress
+- Nginx
+
 # Creating modern WordPress development environment
 
 The purpose of this README file is to explain how this environment works and how it was made. The file has been written in a way that any user should be able to create the same environment using given resources.
@@ -82,7 +89,9 @@ And now the environment needs the network definition.
 
 ## Part 5, Issues & Improvements
 
-Throughout the usage of this docker environment I have come across issues that prevent the development experience from being smooth. On this chapter my aim is to present the issues and improvements. The issues:
+Throughout the usage of this docker environment I have come across issues that prevent the development experience from being smooth. On this chapter my aim is to present the issues and improvements.
+
+### Issues
 
 **1) Exposed directories don't offer enough flexibility**
 
@@ -99,3 +108,16 @@ This issue could be included in previous one, but because of it's effects I'm go
 **4) The localhost domain is too simple**
 
 When an instance of the Wordpress environment is running it's showed as just **localhost**. It would be helpful if the url would atleast show which port the instance is running on.
+
+### Improvements
+
+**1) Exposed directories don't offer enough flexibility**
+
+**2) Multiple yml-files are fired on Docker startup**
+
+**3) Container doesn't care if default port is busy**
+
+**4) The localhost domain is too simple**
+
+
+Note for self for SSL follow this tutorial: https://dev.to/vishalraj82/using-https-in-docker-for-local-development-nc7
