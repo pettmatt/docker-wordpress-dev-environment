@@ -124,3 +124,7 @@ Changed to include the whole `html` directory.
 
 
 **4) The localhost domain is too simple**
+
+**Bonus**
+
+Added phpmyadmin support for database.

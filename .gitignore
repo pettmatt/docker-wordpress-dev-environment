@@ -1,5 +1,5 @@
-/**/html
+/**/wordpress
 /**/.env
 /TODO.txt
-/nginx-conf/certifications/*.test+3-key.pem
+/**/certs/*.test+3-key.pem
 *.pem
