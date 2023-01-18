@@ -32,10 +32,7 @@ services:
     image: wordpress:latest
     container_name: wordpress
     volumes:
-      - wordpress:/var/www/html
-      - ./html:/var/www/html
-      - ./plugins:/var/www/html/wp-content/plugins
-      - ./themes:/var/www/html/wp-content/themes
+      - ./wordpress:/var/www/html
     restart: unless-stopped
     # ports:
     #   - 8082:8082
@@ -57,6 +54,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 3005:3005 # Backup port
     # volumes:
       # - wordpress:/var/www/html
       # - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf
