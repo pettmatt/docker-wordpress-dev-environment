@@ -97,7 +97,7 @@ Throughout the usage of this docker environment I have come across issues that p
 
 In certain projects I have had an issue where I needed deeper access in Wordpress directory tree than what the environment offered (only plugins and themes directories were exposed). Sure it's nice to have simple file structure, but when there's issues developers usually need to access deeper than just plugins and themes directories.
 
-**2) Multiple yml-files are fired on Docker startup**
+**2) Multiple docker-compose instances are fired on Docker startup**
 
 For whatever reason when Docker is opened it starts previously used containers on before Docker was closed. This issue can be handled by manually closing the containers that aren't in use, but there is the issue that developer **needs** to remember to shut these containers. I don't know about you but I don't always remember to close the container which is why after a weekend it takes about 10 minutes to finally realize why the port is hosting wrong Wordpress environment. And that brings us to the next issue.
 
@@ -111,13 +111,14 @@ When an instance of the Wordpress environment is running it's showed as just **l
 
 ### Improvements
 
-**1) Exposed directories don't offer enough flexibility**
+**1) Exposed Wordpress-container directories don't offer enough flexibility**
 
-**2) Multiple yml-files are fired on Docker startup**
+Changed to include the whole `html` directory.
+
+**2) Multiple docker-compose instances are fired on Docker startup**
+
+
 
 **3) Container doesn't care if default port is busy**
 
 **4) The localhost domain is too simple**
-
-
-Note for self for SSL follow this tutorial: https://dev.to/vishalraj82/using-https-in-docker-for-local-development-nc7
