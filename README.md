@@ -2,12 +2,13 @@
 
 The wordpress directory contains a rudimentary development environment which is great as a quick template to get your development environment up and running. The wordpress-ssl directory in the other hand is more robust environment which has SSL-connection already set up. This directory is also going to be the one that is going to get more updates.
 
-*If something isn't working as intended please double check what has changed between the tested versions and the latests.*
+*If something isn't working as intended please double check what has changed between the tested versions and the latest.*
 
 **Latest tested versions**
-- MariaDB
-- Wordpress
-- Nginx
+*Provided string is the digest id*
+- MariaDB `ff1367c7152e`
+- Wordpress `63a40d433d89`
+- Nginx `4c1c50d0ffc6`
 
 # Creating modern WordPress development environment
 
