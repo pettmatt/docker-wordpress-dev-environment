@@ -1,4 +1,6 @@
-# How to generate certifications for local development
+# How to generate certifications for local environment manually
+
+***Usually people use certbot to handle certificates for their environments, but it can also be done manually. If you want to handle certificates yourself make sure to remove certbot from docker-compose file.***
 
 There are more than one way to generate certificates, but I recommend using [mkcert](https://github.com/FiloSottile/mkcert) which supports Linux, MacOS and Windows.
 

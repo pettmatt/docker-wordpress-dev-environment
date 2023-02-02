@@ -11,8 +11,6 @@ services:
     volumes:
       - database:/var/lib/mysql
     restart: unless-stopped
-    ports:
-      - 8081:3306
     # If you want to add credentials through env file
     #env_file: .env
     environment:
@@ -27,20 +25,19 @@ services:
       - app-network
 
   # Optional admin panel
-  phpmyadmin:
-    image: phpmyadmin:latest
-    restart: unless-stopped
-    ports:
-      - 8083:8083
-      - 8088:8088
-    environment:
-      - PMA_ARBITRARY=1
+  # phpmyadmin:
+  #   image: phpmyadmin:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - 80:80
+  #   environment:
+  #     - PMA_ARBITRARY=1
 
   wordpress:
-    container_name: wordpress
-    image: wordpress:latest
     depends_on:
       - database
+    container_name: wordpress
+    image: wordpress:latest
     volumes:
       - ./wordpress:/var/www/html
     restart: unless-stopped
@@ -54,25 +51,36 @@ services:
     networks:
       - app-network
 
-  nginx-proxy:
+  webserver:
     depends_on:
       wordpress:
         condition: service_started
     image: nginx:latest
+    volumes:
+      - wordpress:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot:/etc/letsencrypt
+    restart: unless-stopped
     ports:
-      - 80:80
-      - 443:443
-      - 8080:8080
-    # volumes:
-      # - wordpress:/var/www/html
-      # - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf
-      # - ./nginx-conf/certs:/etc/nginx/certs
+      - 80:80   # Http
+      - 443:443 # Https
     networks:
       - app-network
+
+  certbot:
+    depends_on:
+      - webserver
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - certbot:/etc/letsencrypt
+      - wordpress:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email [ADD_EMAIL_ADDRESS] --agree-tos --no-eff-email -d wordpress.example.test -d www.wordpress.example.test
 
 volumes:
   database:
   wordpress:
+  certbot:
 
 networks:
   app-network:

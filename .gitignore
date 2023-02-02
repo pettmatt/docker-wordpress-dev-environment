@@ -1,5 +1,4 @@
-/**/wordpress
 /**/.env
+/**/wordpress
+/**/certs/*.pem
 /TODO.txt
-/**/certs/*.test+3-key.pem
-*.pem
