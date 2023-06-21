@@ -11,6 +11,37 @@ If something isn't working as intended please double check what has changed betw
 - Wordpress `63a40d433d89`
 - Nginx `4c1c50d0ffc6`
 
+# About the current version
+
+**WordPress environment without ssl protocol haven't been changed and should work as previously.**
+
+**WordPress environment with ssl protocol is completely functional, but it's not perfect.**
+
+User needs to generate their own certificate files (`.crt` and `.key`), check the `./wordpress-ssl/nginx-config/certs` directory for further instructions. And user also needs to include their custom domain in `hosts` file.
+
+**What is a `hosts` file?**
+
+*The hosts file is a plain text file used by operating systems to map hostnames to IP addresses. It acts as a local DNS (Domain Name System) lookup table, allowing you to manually define specific mappings between domain names and IP addresses.*
+
+You can find the file by following certain paths:
+- **Windows**: `C:\Windows\System32\drivers\etc\hosts`
+- **Mac**: `/private/etc/hosts`
+- **Linux**: `/etc/hosts`
+
+In order to use custom domains, include following line in the `hosts` file.
+
+```
+# Port      Domain
+127.0.0.1   wordpress.example.test
+```
+
+Things to improve on:
+- Sometimes ssl protocol is not used
+- It would be handy to have scripts to prevent manual changes
+  - Generate keys script
+  - Add custom domain to `hosts` file script
+  - Start docker instance script
+
 # Creating modern WordPress development environment
 
 The purpose of this README file is to explain how this environment works and how it was made. The file has been written in a way that any user should be able to create the same environment using given resources.
@@ -26,39 +57,6 @@ Useful commands:
   - Check the status of services `docker-compose ps`
   - Check the logs of a service `docker-compose logs [service_name]`
   - Check certificate `docker-compose exec webserver ls -la /etc/letsencrypt/live`
-
-# About the current version
-
-**WordPress environment without ssl protocol haven't been changed and should work as previously.**
-
-**Current version of WordPress environment with ssl protocol is completely functional, but it's not perfect.**
-
-User needs to generate their own certificate files (`.crt` and `.key`) and include their custom domain in `hosts` file. Check the `./wordpress-ssl/nginx-config/certs` directory for further instructions.
-
-**What is a `hosts` file?**
-
-*The hosts file is a plain text file used by operating systems to map hostnames to IP addresses. It acts as a local DNS (Domain Name System) lookup table, allowing you to manually define specific mappings between domain names and IP addresses.*
-
-You can find the file by following certain paths:
-- **Windows**: `C:\Windows\System32\drivers\etc\hosts`
-- **Mac**: `/private/etc/hosts`
-- **Linux**: `/etc/hosts`
-
-In order to launch the current version correctly, include following line to the file.
-
-```
-# Port      Domain
-127.0.0.1   wordpress.example.test
-```
-
-Things to improve on:
-- Sometimes ssl protocol is not used
-- It would be handy to have scripts to prevent manual changes
-  - Generate keys script
-  - Add custom domain to `hosts` file script
-  - Start docker instance script
-
-# Guide to build WordPress environment in Docker
 
 ## Part 1, Getting docker to run WordPress
 
