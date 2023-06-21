@@ -2,9 +2,10 @@
 
 The wordpress directory contains a rudimentary development environment which is great as a quick template to get your development environment up and running. The wordpress-ssl directory in the other hand is more robust environment which has SSL-connection already set up. This directory is also going to be the one that is going to get more updates.
 
-*If something isn't working as intended please double check what has changed between the tested versions and the latest.*
+If something isn't working as intended please double check what has changed between the tested versions and the latest.
 
 **Latest tested versions**
+
 *Provided string is the digest id*
 - MariaDB `ff1367c7152e`
 - Wordpress `63a40d433d89`
@@ -25,6 +26,39 @@ Useful commands:
   - Check the status of services `docker-compose ps`
   - Check the logs of a service `docker-compose logs [service_name]`
   - Check certificate `docker-compose exec webserver ls -la /etc/letsencrypt/live`
+
+# About the current version
+
+**WordPress environment without ssl protocol haven't been changed and should work as previously.**
+
+**Current version of WordPress environment with ssl protocol is completely functional, but it's not perfect.**
+
+User needs to generate their own certificate files (`.crt` and `.key`) and include their custom domain in `hosts` file. Check the `./wordpress-ssl/nginx-config/certs` directory for further instructions.
+
+**What is a `hosts` file?**
+
+*The hosts file is a plain text file used by operating systems to map hostnames to IP addresses. It acts as a local DNS (Domain Name System) lookup table, allowing you to manually define specific mappings between domain names and IP addresses.*
+
+You can find the file by following certain paths:
+- **Windows**: `C:\Windows\System32\drivers\etc\hosts`
+- **Mac**: `/private/etc/hosts`
+- **Linux**: `/etc/hosts`
+
+In order to launch the current version correctly, include following line to the file.
+
+```
+# Port      Domain
+127.0.0.1   wordpress.example.test
+```
+
+Things to improve on:
+- Sometimes ssl protocol is not used
+- It would be handy to have scripts to prevent manual changes
+  - Generate keys script
+  - Add custom domain to `hosts` file script
+  - Start docker instance script
+
+# Guide to build WordPress environment in Docker
 
 ## Part 1, Getting docker to run WordPress
 
@@ -87,40 +121,3 @@ And now the environment needs the network definition.
 
 **Resources:**
  - https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-docker-compose
-
-## Part 5, Issues & Improvements
-
-Throughout the usage of this environment I have come across issues that prevent the development experience from running smoothly. On this chapter my aim is to explain the issues and improvements.
-
-*Note that these are my issues. It can be that you don't find these things as problematic as I do.*
-
-### Issues
-
-
-**1) Exposed directories don't offer enough flexibility**
-
-In certain projects I have had an issue where I needed deeper access in Wordpress directory tree than what the environment offered (only plugins and themes directories were exposed). Sure it's nice to have simple file structure, but when there's issues developers usually need to access more critical files than just plugins and themes directories.
-
-**2) Multiple docker-compose instances are fired on Docker startup**
-
-For whatever reason when Docker is opened it starts where you left previously. This issue can be handled by manually closing the containers before closing the application, but there is the issue that developer **needs** to remember to shut these containers. I don't know about you but I don't always remember to close the container which is why after a weekend it takes about 10 minutes to finally realize why the port is hosting the wrong environment.
-
-**3) The localhost domain is too simple**
-
-When an instance of the Wordpress environment is running it's showed as just **localhost**. It would be helpful if the url would atleast show which port the instance is running on.
-
-### Improvements
-
-**1) Exposed Wordpress-container directories don't offer enough flexibility**
-
-Changed to include the whole `html` directory inside `wordpress` directory.
-
-**2) Multiple docker-compose instances are fired on Docker startup**
-
-There was no possible fixes found for this issue. Developer should manually remember to shut down the container(s) before closing Docker.
-
-**3) The localhost domain is too simple**
-
-Fixed through Nginx configurations. If the domain isn't showing correctly change WordPress general site address settings. 
-
-**Note that in its current state nginx is unable to find conf file, even if it's included.**

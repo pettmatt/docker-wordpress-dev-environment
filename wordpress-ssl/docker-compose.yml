@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3"
 
 services:
   database:
@@ -7,22 +7,22 @@ services:
     image: mariadb:latest
     # If you really want to use MySQL, uncomment the following line
     #image: mysql:8.0.27
-    command: '--default-authentication-plugin=mysql_native_password'
+    command: "--default-authentication-plugin=mysql_native_password"
     volumes:
       - database:/var/lib/mysql
     restart: unless-stopped
     # If you want to add credentials through env file
     #env_file: .env
     environment:
-      - MYSQL_DATABASE=wordpress-project-name
-      - MYSQL_ROOT_PASSWORD=admin
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=thepasstoruleoverdb
+      MYSQL_DATABASE: wordpress-project-name
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: thepasstoruleoverdb
     expose:
       - 3306
       - 33060
     networks:
-      - app-network
+      - wordpress-network
 
   # Optional admin panel
   # phpmyadmin:
@@ -44,44 +44,35 @@ services:
     # If you want to add credentials through env file
     #env_file: .env
     environment:
-      - WORDPRESS_DB_HOST=database # Should be the name of the database service
-      - WORDPRESS_DB_USER=admin
-      - WORDPRESS_DB_PASSWORD=thepasstoruleoverdb
-      - WORDPRESS_DB_NAME=wordpress-project-name
+      WORDPRESS_DB_HOST: database # Should be the name of the database service
+      WORDPRESS_DB_USER: admin
+      WORDPRESS_DB_PASSWORD: thepasstoruleoverdb
+      WORDPRESS_DB_NAME: wordpress-project-name
     networks:
-      - app-network
+      - wordpress-network
 
-  webserver:
+  nginx:
+    container_name: nginx
     depends_on:
       wordpress:
         condition: service_started
     image: nginx:latest
     volumes:
-      - wordpress:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
-      - certbot:/etc/letsencrypt
+      - ./wordpress/html:/var/www/html
+      - ./nginx-config:/etc/nginx/conf.d
+      - ./nginx-config/certs:/etc/nginx/ssl
     restart: unless-stopped
     ports:
       - 80:80   # Http
       - 443:443 # Https
     networks:
-      - app-network
-
-  certbot:
-    depends_on:
-      - webserver
-    container_name: certbot
-    image: certbot/certbot
-    volumes:
-      - certbot:/etc/letsencrypt
-      - wordpress:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email [ADD_EMAIL_ADDRESS] --agree-tos --no-eff-email -d wordpress.example.test -d www.wordpress.example.test
+      - wordpress-network
 
 volumes:
   database:
   wordpress:
-  certbot:
+  nginx:
 
 networks:
-  app-network:
+  wordpress-network:
     driver: bridge # Connects the services

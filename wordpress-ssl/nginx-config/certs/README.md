@@ -23,3 +23,9 @@ Below you can see an example how earlier generated certificates should be added.
 - `ssl_certificate_key /etc/nginx/cert/[cert-name]+3-key.pem.key;`
 
 It's worth noting that Nginx is unable to create and read the certificates if multiple containers are starting at the same time. You can find more information about this bug from this [Stack Exchange post](https://serverfault.com/questions/937274/nginx-doesnt-find-ssl-certificate-in-docker-even-though-its-there).
+
+**Update to the issue introduced above. Currently I'm unable to reproduce the problem, but it may appear when using this docker setup for longer period of time.**
+
+## Recommended tutorial to generate `.crt` and `.key` files
+
+If the above guide didn't work please take a look at Dave Kerr's guide for generating SSL-keys with `mkcert` and enabling SSL-support with Nginx. [Link to the guide](https://hackerrdave.com/https-local-docker-nginx/).

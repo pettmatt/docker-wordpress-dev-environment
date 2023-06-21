@@ -1,4 +1,6 @@
 /**/.env
 /**/wordpress
 /**/certs/*.pem
+/**/certs/*.crt
+/**/certs/*.key
 /TODO.txt
